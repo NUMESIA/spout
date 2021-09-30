@@ -114,6 +114,7 @@ EOD;
         $worksheet->setFilePointer($sheetFilePointer);
 
         \fwrite($sheetFilePointer, self::SHEET_XML_FILE_HEADER);
+        \fwrite($sheetFilePointer, '<sheetFormatPr defaultColWidth="30" />');
         \fwrite($sheetFilePointer, '<sheetData>');
     }
 
