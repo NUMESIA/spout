@@ -63,6 +63,8 @@ EOD;
     /** @var InternalEntityFactory Factory to create entities */
     private $entityFactory;
 
+    private $dimensions;
+
     /**
      * WorksheetManager constructor.
      *
@@ -86,6 +88,7 @@ EOD;
         InternalEntityFactory $entityFactory
     ) {
         $this->shouldUseInlineStrings = $optionsManager->getOption(Options::SHOULD_USE_INLINE_STRINGS);
+        $this->dimensions = $optionsManager->getOption(Options::SHEET_DIMENSIONS);
         $this->rowManager = $rowManager;
         $this->styleManager = $styleManager;
         $this->styleMerger = $styleMerger;
@@ -114,8 +117,22 @@ EOD;
         $worksheet->setFilePointer($sheetFilePointer);
 
         \fwrite($sheetFilePointer, self::SHEET_XML_FILE_HEADER);
-        \fwrite($sheetFilePointer, '<sheetFormatPr defaultColWidth="30" />');
+        \fwrite($sheetFilePointer, '<sheetFormatPr defaultColWidth="20" />');
+
+        static $sheetIndex = 0;
+        if (isset($this->dimensions[$sheetIndex])) {
+            $cols = $this->dimensions[$sheetIndex];
+            \fwrite($sheetFilePointer, '<cols>');
+            foreach ($cols as $col) {
+                $column = '<col min="'. $col[0] .'" max="'. $col[1] .'" width="'. $col[2] .'" customWidth="1" />';
+                \fwrite($sheetFilePointer, $column);
+            }
+            \fwrite($sheetFilePointer, '</cols>');
+        }
+        $sheetIndex += 1;
+
         \fwrite($sheetFilePointer, '<sheetData>');
+
     }
 
     /**

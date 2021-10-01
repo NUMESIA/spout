@@ -47,4 +47,13 @@ class Writer extends WriterMultiSheetsAbstract
 
         return $this;
     }
+
+    public function setSheetsDimensions($dimensions)
+    {
+        $this->throwIfWriterAlreadyOpened('Writer must be configured before opening it.');
+
+        $this->optionsManager->setOption(Options::SHEET_DIMENSIONS, $dimensions);
+
+        return $this;
+    }
 }

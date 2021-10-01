@@ -20,4 +20,5 @@ abstract class Options
 
     // XLSX specific options
     const SHOULD_USE_INLINE_STRINGS = 'shouldUseInlineStrings';
+    const SHEET_DIMENSIONS = 'sheetDimensions';
 }
