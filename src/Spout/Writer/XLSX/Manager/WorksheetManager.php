@@ -117,17 +117,21 @@ EOD;
         $worksheet->setFilePointer($sheetFilePointer);
 
         \fwrite($sheetFilePointer, self::SHEET_XML_FILE_HEADER);
-        \fwrite($sheetFilePointer, '<sheetFormatPr defaultColWidth="20" />');
+        // @NOTE: disabled because invalid syntax in Excel
+        // \fwrite($sheetFilePointer, '<sheetFormatPr defaultColWidth="20" />');
 
         static $sheetIndex = 0;
         if (isset($this->dimensions[$sheetIndex])) {
             $cols = $this->dimensions[$sheetIndex];
-            \fwrite($sheetFilePointer, '<cols>');
-            foreach ($cols as $col) {
-                $column = '<col min="'. $col[0] .'" max="'. $col[1] .'" width="'. $col[2] .'" customWidth="1" />';
-                \fwrite($sheetFilePointer, $column);
+            // Don't show <cols> if no dimensions set
+            if ($cols) {
+                \fwrite($sheetFilePointer, '<cols>');
+                foreach ($cols as $col) {
+                    $column = '<col min="'. $col[0] .'" max="'. $col[1] .'" width="'. $col[2] .'" customWidth="1" />';
+                    \fwrite($sheetFilePointer, $column);
+                }
+                \fwrite($sheetFilePointer, '</cols>');
             }
-            \fwrite($sheetFilePointer, '</cols>');
         }
         $sheetIndex += 1;
 
